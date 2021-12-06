@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Classes\CSVReader;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class Script extends Command
 {
@@ -50,7 +51,17 @@ class Script extends Command
             echo $input['msg'];
             return Command::FAILURE;
         } else {
+
+            $this->print($input['data']);
             return Command::SUCCESS;
+        }
+
+    }
+
+    public function print($fees)
+    {
+        foreach ($fees as $fee) {
+            echo "$fee\n\r";
         }
 
     }

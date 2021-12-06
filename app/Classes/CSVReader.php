@@ -3,6 +3,9 @@
 namespace App\Classes;
 
 use Exception;
+use Illuminate\Support\Facades\Cache;
+use App\Classes\Commission;
+
 
 class CSVReader
 {
@@ -31,16 +34,19 @@ class CSVReader
                  * TODO: Optimize, to Process here
                 */
                 // And do what you need to do with every line
-                $data[] = $row;
+                // Calculate Commission for this Row
+                $commission = new commission($row);
+                $data[] = $commission->fee();
 
                 // Increase the current line
                 $lineNumber++;
             }
             fclose($handle);
-            return collect(['error'=>0, 'data'=>$data]);
+            return ['error'=>0, 'data'=>$data];
         }catch(Exception $e) {
-            return collect(['error'=>1, 'msg'=>$e->getMessage(), 'data'=>[]]);
+            return ['error'=>1, 'msg'=>$e->getMessage(), 'data'=>[]];
         }
 
     }
+
 }
