@@ -27,17 +27,19 @@ class CSVReader
                 // Parse the raw csv string: "1, a, b, c"
                 $row = str_getcsv($raw_string);
 
-                // into an array: ['1', 'a', 'b', 'c']
+                /*
+                 * TODO: Optimize, to Process here
+                */
                 // And do what you need to do with every line
-                $data = $row;
+                $data[] = $row;
 
                 // Increase the current line
                 $lineNumber++;
             }
             fclose($handle);
-            return $data;
+            return collect(['error'=>0, 'data'=>$data]);
         }catch(Exception $e) {
-            return ['error'=>1, 'msg'=>$e->getMessage()];
+            return collect(['error'=>1, 'msg'=>$e->getMessage(), 'data'=>[]]);
         }
 
     }

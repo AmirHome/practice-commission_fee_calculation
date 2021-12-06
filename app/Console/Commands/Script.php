@@ -44,10 +44,10 @@ class Script extends Command
     {
         $fileName = $this->argument('file_name');
 
-        $data = $this->csvReader->read($fileName);
+        $input = $this->csvReader->read($fileName);
 
-        if (isset($data['error'])) {
-            echo $data['msg'];
+        if (!empty($input->error)) {
+            echo $input['msg'];
             return Command::FAILURE;
         } else {
             return Command::SUCCESS;
