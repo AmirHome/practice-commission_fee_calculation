@@ -41,8 +41,10 @@ class CSVReader
                 // Increase the current line
                 $lineNumber++;
             }
+
             fclose($handle);
             return ['error'=>0, 'data'=>$data];
+
         }catch(Exception $e) {
             return ['error'=>1, 'msg'=>$e->getMessage(), 'data'=>[]];
         }

@@ -61,7 +61,7 @@ class Script extends Command
     public function print($fees)
     {
         foreach ($fees as $fee) {
-            echo "$fee\n\r";
+            echo number_format( $fee,2) . "\n\r";
         }
 
     }
