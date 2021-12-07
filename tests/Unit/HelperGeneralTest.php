@@ -13,6 +13,8 @@ class HelperGeneralTest extends TestCase
      */
     public function test_general_round_up()
     {
+        $this->assertEquals(0.03,roundUp(0.023, 2));
+
         $this->assertEquals(1025,roundUp(1024.654321, 0));
         $this->assertEquals(1024.7,roundUp(1024.654321, 1));
         $this->assertEquals(1024.66,roundUp(1024.654321, 2));
