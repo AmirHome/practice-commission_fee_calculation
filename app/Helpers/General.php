@@ -18,6 +18,8 @@ if (!function_exists('roundUpPercent')) {
 if (!function_exists('getWeekendDate')) {
     function getWeekendDate($date)
     {
-        return $date;
+        return date('Y-m-d', strtotime('next monday', strtotime($date)));
     }
 }
+
+

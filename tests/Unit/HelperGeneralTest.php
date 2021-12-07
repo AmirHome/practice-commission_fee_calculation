@@ -39,4 +39,16 @@ class HelperGeneralTest extends TestCase
         $this->assertEquals('1,200.10',number_format(roundUpPercent(12001, 10, 2),2));
 
     }
+
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function test_general_get_weekend_date()
+    {
+
+        /* https://www.calculator.net/day-of-the-week-calculator.html?today=12%2F31%2F2014&x=72&y=20 */
+        $this->assertEquals('2015-01-05',getWeekendDate('2014-12-31'));
+    }
 }
