@@ -14,6 +14,7 @@ class CommissionTest extends TestCase
      */
     public function test_fee()
     {
+
         $row = ['2014-12-31',4,'private','withdraw',1200.00,'EUR'];
         $commission = new Commission($row);
         $fee = $commission->fee();
@@ -29,7 +30,7 @@ class CommissionTest extends TestCase
         $fee = $commission->fee();
         $this->assertEquals('0.00', $fee);
 
-        /* */
+
         $row = ['2016-01-06',5,'private','withdraw',200.00,'EUR'];
         $commission = new Commission($row);
         $fee = $commission->fee();
@@ -49,5 +50,6 @@ class CommissionTest extends TestCase
         $commission = new Commission($row);
         $fee = $commission->fee();
         $this->assertEquals('0.60', $fee);
+
     }
 }

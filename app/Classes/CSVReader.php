@@ -3,7 +3,7 @@
 namespace App\Classes;
 
 use Exception;
-use Illuminate\Support\Facades\Cache;
+use Tests\TestCase;
 use App\Classes\Commission;
 
 
@@ -36,6 +36,7 @@ class CSVReader
                 // And do what you need to do with every line
                 // Calculate Commission for this Row
                 $commission = new commission($row);
+
                 $data[] = $commission->fee();
 
                 // Increase the current line

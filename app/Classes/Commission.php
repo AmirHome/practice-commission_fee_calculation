@@ -51,12 +51,11 @@ class Commission
         }
 
         return $fee;
-
-
     }
 
     private function chargedWithdrawPrivateAmount(): float
     {
+        //return roundUpPercent($this->operationAmount, 100, 2);
         // Set Limit and Expire Date of free commission
         // Free Commission until 1000 EUR
         $amount = 0;
@@ -80,7 +79,7 @@ class Commission
                 }
                 break;
             default:
-
+                $limit = 0;
         }
 
         Cache::put($this->userId, ['limit' => $limit,
@@ -94,7 +93,7 @@ class Commission
             $amount = $this->operationAmount;
         }
 
-        if (false){
+/*        if (false){
             print_r([Cache::get($this->userId),
                 $userFreeCommission,
                 $limit,
@@ -102,7 +101,7 @@ class Commission
                 roundUpPercent($amount, 0.3, 2)
             ]);
             dd('chargedWithdrawPrivateAmount');
-        }
+        }*/
         return roundUpPercent($amount, 0.3, 2);
     }
 
