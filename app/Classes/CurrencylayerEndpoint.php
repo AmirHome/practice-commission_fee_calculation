@@ -58,7 +58,7 @@ class CurrencylayerEndpoint
         return collect($response);*/
     }
 
-    public function mockCurrencyConversion($amount, $from , $to = 'EUR')
+    public function mockCurrencyConversion($amount, $currency , $reverse = false)
     {
         $mock = new MockHandler([
             $response = new Response(200, ['Content-Type' => 'application/json'],
@@ -72,6 +72,13 @@ class CurrencylayerEndpoint
 
         $response = json_decode($response->getBody(), true);
 
-        return $amount / $response['quotes']["{$to}{$from}"];
+        if ($reverse){
+            return $amount * $response['quotes']["EUR{$currency}"];
+
+        }else{
+            return $amount / $response['quotes']["EUR{$currency}"];
+        }
+
+
     }
 }

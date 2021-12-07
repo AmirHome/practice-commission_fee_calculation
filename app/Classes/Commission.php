@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use Illuminate\Support\Facades\Cache;
+use App\Classes\CurrencylayerEndpoint;
 
 class Commission
 {
@@ -18,6 +19,7 @@ class Commission
         $this->operationType = $row[3]; //
         $this->operationAmount = $row[4];
         $this->operationCurrency = $row[5];
+        $this->currency = new CurrencylayerEndpoint;
     }
 
     public function fee(): float
@@ -69,29 +71,37 @@ class Commission
             if($attemptsPerWeek == 1) { $userFreeCommission['limit'] = 1000;}
         }
 
-        switch ($this->operationCurrency) {
-            case 'EUR':
-                if ($userFreeCommission['limit'] <= $this->operationAmount) {
-                    $limit = 0;
-                } else {
-                    $limit = $userFreeCommission['limit'] - $this->operationAmount;
-                }
-                break;
-            default:
-                $limit = 0;
-        }
 
+        $amountEuro = ('EUR' == $this->operationCurrency) ? $this->operationAmount : $this->currency->mockCurrencyConversion($this->operationAmount, $this->operationCurrency );
+
+        //echo $amountEuro;
+        //dd($amountEuro, $this->operationAmount);
+        if ($userFreeCommission['limit'] <=  $amountEuro) {
+            $limit = 0;
+        } else {
+            $limit = $userFreeCommission['limit'] - $amountEuro;
+        }
+        //echo $limit;
+        //dd($limit);
         Cache::put($this->userId, ['limit' => $limit,
             'expire_week' => getWeekendDate($this->operationDate),
             'attempt_week' => $attemptsPerWeek]);
 
         if (0 == $limit) {
-            $amount = $this->operationAmount - $userFreeCommission['limit'];
+            if (0 == $userFreeCommission['limit']){
+                $amount = $this->operationAmount;
+            }else{
+                $amount = $amountEuro - $userFreeCommission['limit'];
+                $amount = ('EUR' == $this->operationCurrency) ? $amount : $this->currency->mockCurrencyConversion($amount,  $this->operationCurrency ,true);
+            }
+
+//            echo $amount;
         }
         if(4 <= $attemptsPerWeek){
             $amount = $this->operationAmount;
         }
-
+//        dd($amount);
+//        dd(roundUpPercent($amount, 0.3, 2));
         return roundUpPercent($amount, 0.3, 2);
     }
 
