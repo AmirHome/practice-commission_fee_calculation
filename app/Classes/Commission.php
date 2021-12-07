@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Cache;
 class Commission
 {
 
-
     /**
      * @param array $row
      */
@@ -59,7 +58,7 @@ class Commission
         // Set Limit and Expire Date of free commission
         // Free Commission until 1000 EUR
         $amount = 0;
-        $userFreeCommission['limit'] = 1000;
+        $userFreeCommission['limit'] = 1000;//EUR
         $attemptsPerWeek = 1;
 
         if (Cache::has($this->userId)) {
@@ -93,15 +92,6 @@ class Commission
             $amount = $this->operationAmount;
         }
 
-/*        if (false){
-            print_r([Cache::get($this->userId),
-                $userFreeCommission,
-                $limit,
-                $amount,
-                roundUpPercent($amount, 0.3, 2)
-            ]);
-            dd('chargedWithdrawPrivateAmount');
-        }*/
         return roundUpPercent($amount, 0.3, 2);
     }
 
