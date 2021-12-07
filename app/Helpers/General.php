@@ -7,9 +7,17 @@ if (!function_exists('roundUp')) {
         return (ceil($number * $fig) / $fig);
     }
 }
+
 if (!function_exists('roundUpPercent')) {
     function roundUpPercent($number, $percent, $precision = 2)
     {
         return roundUp($number * $percent / 100, $precision);
+    }
+}
+
+if (!function_exists('getWeekendDate')) {
+    function getWeekendDate($date)
+    {
+        return $date;
     }
 }

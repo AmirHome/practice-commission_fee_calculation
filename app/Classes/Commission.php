@@ -23,12 +23,12 @@ class Commission
 
     public function fee(): float
     {
-        return $this->calculateFee() ;
-        Cache::get($this->userId);
+        return $this->calculateFee();
     }
 
-    private function calculateFee():float
+    private function calculateFee(): float
     {
+
         $fee = 0;
         // Realize Operation Type
         switch (strtolower($this->operationType)) {
@@ -51,22 +51,74 @@ class Commission
         }
 
         return $fee;
-        Cache::put($this->userId, $this->operationAmount);
+
 
     }
 
-    private function chargedDepositAmount():float
+    private function chargedWithdrawPrivateAmount(): float
     {
-        return roundUpPercent( $this->operationAmount, 0.03, 2) ;
+
+        if (Cache::has($this->userId)) {
+            // Calculate Limit and Expire Date of free commission
+            $userFreeCommission = Cache::get($this->userId);
+            print_r($userFreeCommission);
+
+            $amount = 0;
+            switch ($this->operationCurrency) {
+                case 'EUR':
+                    if ($userFreeCommission['limit'] <= $this->operationAmount) {
+                        $limit = 0;
+                    } else {
+                        $limit = $userFreeCommission['limit'] - $this->operationAmount;
+                    }
+
+                    break;
+                default:
+
+            }
+            if (0 == $limit) {
+                $amount = $this->operationAmount - $userFreeCommission['limit'];
+            }
+
+        } else {
+            // Set Limit and Expire Date of free commission
+
+            // Free Commission until 1000 EUR
+            $amount = 0;
+            switch ($this->operationCurrency) {
+                case 'EUR':
+                    if (1000 <= $this->operationAmount) {
+                        $limit = 0;
+                    } else {
+                        $limit = 1000 - $this->operationAmount;
+                    }
+
+                    break;
+                default:
+
+            }
+            if (0 == $limit) {
+                $amount = $this->operationAmount - 1000;
+            }
+
+            Cache::put($this->userId,
+                ['limit' => $limit, 'expire_week' => getWeekendDate($this->operationDate), 'count_week' => 1]);
+
+            $userFreeCommission = Cache::get($this->userId);
+            print_r($userFreeCommission);
+        }
+
+
+        return roundUpPercent($amount, 0.3, 2);
     }
 
-    private function chargedWithdrawBusinessAmount():float
+    private function chargedWithdrawBusinessAmount(): float
     {
-        return roundUpPercent( $this->operationAmount, 0.5, 2) ;
+        return roundUpPercent($this->operationAmount, 0.5, 2);
     }
 
-    private function chargedWithdrawPrivateAmount():float
+    private function chargedDepositAmount(): float
     {
-        return roundUpPercent( $this->operationAmount, 100, 2) ;
+        return roundUpPercent($this->operationAmount, 0.03, 2);
     }
 }
