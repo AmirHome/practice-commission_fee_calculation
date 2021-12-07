@@ -74,15 +74,12 @@ class Commission
 
         $amountEuro = ('EUR' == $this->operationCurrency) ? $this->operationAmount : $this->currency->mockCurrencyConversion($this->operationAmount, $this->operationCurrency );
 
-        //echo $amountEuro;
-        //dd($amountEuro, $this->operationAmount);
         if ($userFreeCommission['limit'] <=  $amountEuro) {
             $limit = 0;
         } else {
             $limit = $userFreeCommission['limit'] - $amountEuro;
         }
-        //echo $limit;
-        //dd($limit);
+
         Cache::put($this->userId, ['limit' => $limit,
             'expire_week' => getWeekendDate($this->operationDate),
             'attempt_week' => $attemptsPerWeek]);
@@ -95,14 +92,12 @@ class Commission
                 $amount = ('EUR' == $this->operationCurrency) ? $amount : $this->currency->mockCurrencyConversion($amount,  $this->operationCurrency ,true);
             }
 
-//            echo $amount;
         }
         if(4 <= $attemptsPerWeek){
             $amount = $this->operationAmount;
         }
-//        dd($amount);
-//        dd(roundUpPercent($amount, 0.3, 2));
-        return roundUpPercent($amount, 0.3, 2);
+
+        return roundUpPercent($amount, 0.3, ('JPY' != $this->operationCurrency) ?? 0);
     }
 
     private function chargedWithdrawBusinessAmount(): float
